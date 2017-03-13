@@ -41,3 +41,11 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile project(path: ':backend', configuration: 'android-endpoints')
 }
+
+task runAllTests(dependsOn: [":backend:appengineRun",":app:connectedAndroidTest"]){
+    shouldRunAfter ":backend:appengineRun"
+    project(":backend").afterEvaluate{ backend ->
+        backend.extensions.appengine.daemon = true
+    }
+    finalizedBy ":backend:appengineStop"
+}
